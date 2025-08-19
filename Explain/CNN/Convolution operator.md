@@ -128,6 +128,11 @@ $$
 
 > **Ý nghĩa**: Giá trị dương lớn cho thấy có đường biên ngang mạnh tại vùng này.
 
+![relu](../../imgs/relu.jpg)
+
+Áp dụng ReLU:
+ReLU(15) = max(0, 15) = 15
+
 ---
 
 ![Laplacian](../../imgs/Laplacian.jpg)
@@ -158,6 +163,9 @@ $$
 
 > **Ý nghĩa**: Kết quả gần 0 → tại vị trí này không có biên rõ rệt theo Laplacian.
 
+Áp dụng ReLU:
+ReLU(-1) = max(0, -1) = 0
+
 ---
 
 ![Blur](../../imgs/Blur.jpg)
@@ -187,6 +195,9 @@ S_{blur}(2,2) = \frac{48}{9} \approx 5.33
 $$
 
 > **Ý nghĩa**: Làm mờ → giá trị pixel trở thành trung bình, giúp giảm nhiễu.
+
+Áp dụng ReLU:
+ReLU(5.33) = max(0, 5.33) = 5.33
 
 ---
 
