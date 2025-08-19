@@ -320,12 +320,6 @@ $$
 
 ### 1. Convolution (Conv)  
 - Áp dụng các **kernel/filter** để trích xuất đặc trưng (feature maps).  
-- Ví dụ: lọc cạnh, đường viền, góc cạnh,…  
-- Công thức:  
-
-$$
-y[x,y] = \sum_{i=-k}^{k} \sum_{j=-k}^{k} I[x-i, y-j] \cdot K[i,j]
-$$  
 
 ---
 
@@ -334,6 +328,7 @@ $$
 - Thường dùng: **Max Pooling** hoặc **Average Pooling**.  
 
 Ví dụ với Max Pooling $2 \times 2$:  
+
 $$
 \begin{bmatrix}
 1 & 3 \\
@@ -348,6 +343,7 @@ $$
 - Chuẩn bị dữ liệu để đưa vào **Fully Connected Layer**.  
 
 Ví dụ:  
+
 $$
 \begin{bmatrix}
 a & b \\
