@@ -365,6 +365,7 @@ $$
 - Chuyển vector đầu ra thành **xác suất phân lớp**.  
 
 Công thức:  
+
 $$
 Softmax(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{C} e^{z_j}}
 $$  
