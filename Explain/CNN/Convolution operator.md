@@ -334,61 +334,35 @@ $$
 
 ---
 
-### 2. Pooling (ví dụ: Max Pooling, cửa sổ $2 \times 2$, stride = 2)
+### 2. Pooling (ví dụ: Max Pooling, cửa sổ 2x2, stride = 2)
 - Mục tiêu: giảm kích thước không gian, giữ đặc trưng mạnh nhất từng vùng.
 
-Các vùng $2 \times 2$ (valid) và giá trị lớn nhất:
-
+Các vùng 2x2 (valid) và giá trị lớn nhất:
+```lua
 - Ô (1): hàng 1–2, cột 1–2  
 
-$$
-\begin{bmatrix}
--5 & -6 \\
-2 & 6
-\end{bmatrix}
-\Rightarrow \max = 6
-$$
+[[-5, -6],
+[ 2, 6]] → max = 6
 
-- Ô (2): hàng 1–2, cột 3–4 
-
-$$
-\begin{bmatrix}
--3 & 0 \\
-12 & 18
-\end{bmatrix}
-\Rightarrow \max = 18
-$$
+- Ô (2): hàng 1–2, cột 3–4  
+[[-3, 0],
+[12, 18]] → max = 18
 
 - Ô (3): hàng 3–4, cột 1–2  
-
-$$
-\begin{bmatrix}
-16 & 21 \\
--4 & -9
-\end{bmatrix}
-\Rightarrow \max = 21
-$$
+[[16, 21],
+[-4, -9]] → max = 21
 
 - Ô (4): hàng 3–4, cột 3–4  
+[[15, 9],
+[-15, -21]] → max = 15
 
-$$
-\begin{bmatrix}
-15 & 9 \\
--15 & -21
-\end{bmatrix}
-\Rightarrow \max = 15
-$$
+Kết quả Max Pooling (ma trận 2x2):
 
-Kết quả Max Pooling (ma trận $2 \times 2$):
+P = [[ 6, 18 ],
+[21, 15 ]]
+```
 
-$$
-P = \begin{bmatrix}
-6 & 18 \\
-21 & 15
-\end{bmatrix}
-$$
-
-> Ghi chú: Với stride = 2 và kernel $2 \times 2$ trên đầu vào $5 \times 5$, phần rìa cuối không đủ cửa sổ nên bị bỏ qua (valid pooling).
+> Ghi chú: Với stride = 2 và kernel 2x2 trên đầu vào 5x5, phần rìa cuối không đủ cửa sổ nên bị bỏ qua
 
 ---
 
