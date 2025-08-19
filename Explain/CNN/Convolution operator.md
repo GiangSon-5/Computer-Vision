@@ -312,3 +312,73 @@ $$
   **Ảnh gốc → Blur (giảm nhiễu) → Edge Filter (Sobel/Laplacian/custom)**  
 - Blur đóng vai trò như "bộ lọc trước" để biên phát hiện ra **ít nhiễu, chính xác hơn**.
 
+---
+---
+
+
+## 5. Kiến trúc CNN cơ bản: Conv → Pooling → Flatten → Fully Connected → Softmax  
+
+### 1. Convolution (Conv)  
+- Áp dụng các **kernel/filter** để trích xuất đặc trưng (feature maps).  
+- Ví dụ: lọc cạnh, đường viền, góc cạnh,…  
+- Công thức:  
+
+$$
+y[x,y] = \sum_{i=-k}^{k} \sum_{j=-k}^{k} I[x-i, y-j] \cdot K[i,j]
+$$  
+
+---
+
+### 2. Pooling  
+- Giảm kích thước không gian (spatial size), giữ lại đặc trưng quan trọng → giảm số tham số, giảm overfitting.  
+- Thường dùng: **Max Pooling** hoặc **Average Pooling**.  
+
+Ví dụ với Max Pooling $2 \times 2$:  
+$$
+\begin{bmatrix}
+1 & 3 \\
+2 & 4
+\end{bmatrix} \to 4
+$$  
+
+---
+
+### 3. Flatten  
+- Chuyển tensor 2D/3D (feature maps) thành vector 1D.  
+- Chuẩn bị dữ liệu để đưa vào **Fully Connected Layer**.  
+
+Ví dụ:  
+$$
+\begin{bmatrix}
+a & b \\
+c & d
+\end{bmatrix}
+\to [a, b, c, d]
+$$  
+
+---
+
+### 4. Fully Connected (Dense Layer)  
+- Mỗi neuron kết nối với toàn bộ input từ Flatten.  
+- Thực hiện phép nhân ma trận + bias + hàm kích hoạt (ReLU, Sigmoid, …).  
+- Vai trò: học **mối quan hệ phi tuyến** từ các đặc trưng đã trích xuất.  
+
+---
+
+### 5. Softmax (Output Layer)  
+- Chuyển vector đầu ra thành **xác suất phân lớp**.  
+
+Công thức:  
+$$
+Softmax(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{C} e^{z_j}}
+$$  
+
+Trong đó $C$ là số lớp (classes).  
+- Đảm bảo tổng các xác suất = 1.  
+- Ví dụ: Output `[2.1, 1.3, 0.2]` → Softmax = `[0.65, 0.29, 0.06]`.  
+
+---
+
+✅ Chuỗi xử lý CNN cơ bản:  
+
+**Input Image → Conv → Pooling → Flatten → Fully Connected → Softmax → Output (label/probability)**
