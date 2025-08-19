@@ -109,6 +109,8 @@ $$
 
 ---
 
+![Laplacian](../../imgs/Laplacian.jpg)
+
 ### b) Laplacian (lọc biên toàn cục)
 
 Kernel:
@@ -136,6 +138,8 @@ $$
 > **Ý nghĩa**: Kết quả gần 0 → tại vị trí này không có biên rõ rệt theo Laplacian.
 
 ---
+
+![Blur](../../imgs/Blur.jpg)
 
 ### c) Blur (làm mờ trung bình)
 
