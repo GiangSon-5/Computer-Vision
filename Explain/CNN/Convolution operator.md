@@ -77,7 +77,7 @@ $$
 
 ---
 
-![Horizontal](..\..\imgs\Horizontal.jpg)
+![Horizontal](../../imgs/Horizontal.jpg)
 
 ### a) Horizontal Filter (biên ngang)
 
