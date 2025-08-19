@@ -340,6 +340,7 @@ $$
 Các vùng $2 \times 2$ (valid) và giá trị lớn nhất:
 
 - Ô (1): hàng 1–2, cột 1–2  
+
 $$
 \begin{bmatrix}
 -5 & -6 \\
@@ -348,7 +349,8 @@ $$
 \Rightarrow \max = 6
 $$
 
-- Ô (2): hàng 1–2, cột 3–4  
+- Ô (2): hàng 1–2, cột 3–4 
+
 $$
 \begin{bmatrix}
 -3 & 0 \\
@@ -358,6 +360,7 @@ $$
 $$
 
 - Ô (3): hàng 3–4, cột 1–2  
+
 $$
 \begin{bmatrix}
 16 & 21 \\
@@ -367,6 +370,7 @@ $$
 $$
 
 - Ô (4): hàng 3–4, cột 3–4  
+
 $$
 \begin{bmatrix}
 15 & 9 \\
