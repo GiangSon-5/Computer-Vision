@@ -316,66 +316,152 @@ $$
 ---
 
 
-## 5. Kiến trúc CNN cơ bản: Conv → Pooling → Flatten → Fully Connected → Softmax  
+## 5. Kiến trúc CNN cơ bản: Conv → Pooling → Flatten → Fully Connected → Softmax
 
-### 1. Convolution (Conv)  
-- Áp dụng các **kernel/filter** để trích xuất đặc trưng (feature maps).  
-
----
-
-### 2. Pooling  
-- Giảm kích thước không gian (spatial size), giữ lại đặc trưng quan trọng → giảm số tham số, giảm overfitting.  
-- Thường dùng: **Max Pooling** hoặc **Average Pooling**.  
-
-Ví dụ với Max Pooling $2 \times 2$:  
+### 1. Convolution (Conv)
+- Đã trình bày chi tiết ở phần trước (cross-correlation).
+- **Giả sử** sau Conv (same padding) thu được feature map 5×5 (ví dụ với Horizontal Filter):
 
 $$
-\begin{bmatrix}
-1 & 3 \\
-2 & 4
-\end{bmatrix} \to 4
-$$  
-
----
-
-### 3. Flatten  
-- Chuyển tensor 2D/3D (feature maps) thành vector 1D.  
-- Chuẩn bị dữ liệu để đưa vào **Fully Connected Layer**.  
-
-Ví dụ:  
-
-$$
-\begin{bmatrix}
-a & b \\
-c & d
+S = \begin{bmatrix}
+-5 & -6 & -3 & 0 & 1 \\
+2 & 6 & 12 & 18 & 14 \\
+16 & 21 & 15 & 9 & 4 \\
+-4 & -9 & -15 & -21 & -16 \\
+-5 & -3 & 6 & 15 & 13
 \end{bmatrix}
-\to [a, b, c, d]
-$$  
+$$
 
 ---
 
-### 4. Fully Connected (Dense Layer)  
-- Mỗi neuron kết nối với toàn bộ input từ Flatten.  
-- Thực hiện phép nhân ma trận + bias + hàm kích hoạt (ReLU, Sigmoid, …).  
-- Vai trò: học **mối quan hệ phi tuyến** từ các đặc trưng đã trích xuất.  
+### 2. Pooling (ví dụ: Max Pooling, cửa sổ $2 \times 2$, stride = 2)
+- Mục tiêu: giảm kích thước không gian, giữ đặc trưng mạnh nhất từng vùng.
 
----
+Các vùng $2 \times 2$ (valid) và giá trị lớn nhất:
 
-### 5. Softmax (Output Layer)  
-- Chuyển vector đầu ra thành **xác suất phân lớp**.  
+- Ô (1): hàng 1–2, cột 1–2  
+$$
+\begin{bmatrix}
+-5 & -6 \\
+2 & 6
+\end{bmatrix}
+\Rightarrow \max = 6
+$$
 
-Công thức:  
+- Ô (2): hàng 1–2, cột 3–4  
+$$
+\begin{bmatrix}
+-3 & 0 \\
+12 & 18
+\end{bmatrix}
+\Rightarrow \max = 18
+$$
+
+- Ô (3): hàng 3–4, cột 1–2  
+$$
+\begin{bmatrix}
+16 & 21 \\
+-4 & -9
+\end{bmatrix}
+\Rightarrow \max = 21
+$$
+
+- Ô (4): hàng 3–4, cột 3–4  
+$$
+\begin{bmatrix}
+15 & 9 \\
+-15 & -21
+\end{bmatrix}
+\Rightarrow \max = 15
+$$
+
+Kết quả Max Pooling (ma trận $2 \times 2$):
 
 $$
-Softmax(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{C} e^{z_j}}
-$$  
+P = \begin{bmatrix}
+6 & 18 \\
+21 & 15
+\end{bmatrix}
+$$
 
-Trong đó $C$ là số lớp (classes).  
-- Đảm bảo tổng các xác suất = 1.  
-- Ví dụ: Output `[2.1, 1.3, 0.2]` → Softmax = `[0.65, 0.29, 0.06]`.  
+> Ghi chú: Với stride = 2 và kernel $2 \times 2$ trên đầu vào $5 \times 5$, phần rìa cuối không đủ cửa sổ nên bị bỏ qua (valid pooling).
 
 ---
 
-✅ Chuỗi xử lý CNN cơ bản:  
+### 3. Flatten
+- Chuyển $P \in \mathbb{R}^{2 \times 2}$ thành vector hàng $1 \times 4$ (theo thứ tự hàng–cột):
 
-**Input Image → Conv → Pooling → Flatten → Fully Connected → Softmax → Output (label/probability)**
+$$
+x = \mathrm{Flatten}(P) = [\,6,\;18,\;21,\;15\,]
+$$
+
+---
+
+### 4. Fully Connected (Dense Layer)
+- Giả sử ta có 3 lớp đầu ra (3 classes).  
+- Trọng số $W \in \mathbb{R}^{3 \times 4}$, bias $b \in \mathbb{R}^{3}$:
+
+$$
+W = \begin{bmatrix}
+0.10 & 0.05 & 0.02 & 0.01 \\
+0.05 & 0.02 & 0.01 & 0.04 \\
+0.01 & 0.00 & 0.01 & 0.00
+\end{bmatrix},\quad
+b = \begin{bmatrix}
+0.93 \\
+-0.47 \\
+-0.27
+\end{bmatrix}
+$$
+
+Tính **logits** $z = W x^\top + b$:
+
+$$
+\begin{aligned}
+z_1 &= 0.10\cdot 6 + 0.05\cdot 18 + 0.02\cdot 21 + 0.01\cdot 15 + 0.93 \\
+    &= 0.60 + 0.90 + 0.42 + 0.15 + 0.93 = 3.00 \\[4pt]
+z_2 &= 0.05\cdot 6 + 0.02\cdot 18 + 0.01\cdot 21 + 0.04\cdot 15 - 0.47 \\
+    &= 0.30 + 0.36 + 0.21 + 0.60 - 0.47 = 1.00 \\[4pt]
+z_3 &= 0.01\cdot 6 + 0.00\cdot 18 + 0.01\cdot 21 + 0.00\cdot 15 - 0.27 \\
+    &= 0.06 + 0 + 0.21 + 0 - 0.27 = 0.00
+\end{aligned}
+$$
+
+Vậy:
+
+$$
+z = [\,3,\;1,\;0\,]
+$$
+
+---
+
+### 5. Softmax (Output Layer)
+- Chuyển logits thành xác suất:
+
+$$
+\mathrm{Softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{C} e^{z_j}}, \quad C=3
+$$
+
+Tính trực tiếp:
+
+$$
+e^{3}=20.0855,\; e^{1}=2.7183,\; e^{0}=1.0000 \\
+\Rightarrow \sum = 23.8038
+$$
+
+Xác suất:
+
+$$
+p = \left[\frac{20.0855}{23.8038},\; \frac{2.7183}{23.8038},\; \frac{1.0000}{23.8038}\right]
+\approx [\,0.8438,\;0.1142,\;0.0420\,]
+$$
+
+> Gợi ý tính ổn định số: trừ $\max(z)=3$ trước khi mũ hoá  
+> $z'=[0,-2,-3] \Rightarrow e^{z'}=[1,0.1353,0.0498],\; \sum=1.1851$  
+> $p=[1/1.1851,\;0.1353/1.1851,\;0.0498/1.1851] \approx [0.8438,0.1142,0.0420]$.
+
+---
+
+✅ **Chuỗi xử lý đầy đủ (ví dụ số học):**  
+**Conv (ra $5\times5$ S)** → **MaxPool $2\times2$ (ra $2\times2$ P)** → **Flatten ($x=[6,18,21,15]$)** → **FC ($z=[3,1,0]$)** → **Softmax ($p\approx[0.844,0.114,0.042]$)**
+
