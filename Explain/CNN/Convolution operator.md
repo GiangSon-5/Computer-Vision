@@ -1,3 +1,24 @@
+# 🧠 Tổng quát hóa – Convolutional Neural Network (CNN)
+
+![CNN](../../imgs/cnn.jpg)
+
+- Mạng nơron thần kinh tích chập sử dụng toán tử convolution để trích xuất đặc trưng hình ảnh.
+
+`Image + Filters = Feature Maps`
+
+- Cấu trúc CNN gồm các thành phần chính:
+
+1. Feature maps: thu được thông qua các lớp convolution.
+
+2. Pooling: gộp/tổng hợp đặc trưng để giảm kích thước và tăng tính khái quát.
+
+3. Normalization: chuẩn hóa dữ liệu để tăng hiệu quả huấn luyện.
+
+4. Phân loại: thực hiện qua các lớp Fully Connected (FC).
+
+---
+---
+
 # Convolution (Cross-correlation) và Các Kernel Phổ Biến trong Computer Vision
 
 Trong YOLO và hầu hết các CNN, "convolution" thực chất là **cross-correlation**:
