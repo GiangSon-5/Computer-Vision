@@ -205,6 +205,22 @@ Cell (8,5) chứa tâm 🐕 → chọn Anchor (150×120)
   - Tâm: **(x_gt, y_gt) = (260 px, 170 px)**
   - Kích thước: **(w_gt, h_gt) = (140 px, 100 px)**
 
+### 🔍 Tọa độ các cạnh của bounding box:
+
+- **Trái**:  
+  $x_{\text{left}} = x_{\text{gt}} - \frac{w_{\text{gt}}}{2} = 260 - \frac{140}{2} = 190$
+
+- **Phải**:  
+  $x_{\text{right}} = x_{\text{gt}} + \frac{w_{\text{gt}}}{2} = 260 + \frac{140}{2} = 330$
+
+- **Trên**:  
+  $y_{\text{top}} = y_{\text{gt}} - \frac{h_{\text{gt}}}{2} = 170 - \frac{100}{2} = 120$
+
+- **Dưới**:  
+  $y_{\text{bottom}} = y_{\text{gt}} + \frac{h_{\text{gt}}}{2} = 170 + \frac{100}{2} = 220$
+
+> Bounding box có góc trên trái tại $(190, 120)$ và góc dưới phải tại $(330, 220)$.
+
 ---
 
 ## Bước 1 — Ảnh → Feature maps (giữ spatial info)
