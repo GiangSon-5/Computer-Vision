@@ -1,5 +1,7 @@
 # 📍 Vị trí không gian trong Object Detection (YOLO)
 
+![Boudingbox](../../imgs/Boudingbox.jpg)
+
 Hình minh họa cho thấy cách mô hình object detection (như **YOLO**) sử dụng thông tin **vị trí không gian** để phát hiện đối tượng.
 
 ---
@@ -81,6 +83,7 @@ Mạng dự đoán cho cell này:
 ### 👉 Tính toán
 
 1. **Tâm hộp (x,y)**  
+
 $$
 b_x = \sigma(0.4) + 7 \approx 0.598 + 7 = 7.598
 $$  
@@ -92,6 +95,7 @@ $$
 → Tâm hộp nằm ở vị trí **(7.598, 5.668)** trong lưới 13×13.
 
 Quy đổi sang pixel trên ảnh (mỗi cell = 32px):  
+
 $$
 X = 7.598 \times 32 \approx 243\ \text{px}
 $$  
@@ -102,7 +106,8 @@ $$
 
 ---
 
-2. **Chiều rộng & chiều cao**  
+2. **Chiều rộng & chiều cao** 
+
 $$
 b_w = 100 \cdot e^{0.5} \approx 100 \cdot 1.648 = 164.8
 $$  
@@ -122,6 +127,8 @@ $$
 ---
 
 ## 📐 Các kích thước Feature Map: 13×13, 26×26, 52×52
+
+![3_Boudingbox](../../imgs/3_Boudingbox.jpg)
 
 Khi ảnh đầu vào (ví dụ **416×416**) đi qua mạng CNN, nó được giảm kích thước dần qua các lớp convolution và pooling.  
 Kết quả là ta thu được **các feature map** có kích thước nhỏ hơn:
