@@ -63,16 +63,36 @@ Ví dụ:
 - **Training (gán nhãn & học)**:  
   1) Xác định cell (trên từng feature map) chứa **tâm** GT box.  
   2) So IoU GT với các **anchor** của tầng đó → chọn anchor tốt nhất.  
-  3) Tạo **mục tiêu học (target)**: \(t_x, t_y, t_w, t_h\), objectness, class.  
+  3) Tạo **mục tiêu học (target)**: $t_x, t_y, t_w, t_h$, objectness, class.  
 - **Inference (dự đoán)**:  
   - Mô hình xuất **offset** trên từng **cell–anchor**.  
-  - **Decode** về toạ độ ảnh bằng **stride s** (để “phóng” từ lưới về pixel).
+  - **Decode** về toạ độ ảnh bằng **stride s** (để “phóng” từ lưới về pixel).  
 
 ---
 
-## 5) Công thức decode (áp dụng cho input 640, mọi stride)  
-Giả sử ta đang ở một tầng có **stride = s** (s ∈ {8, 16, 32}), cell gốc là $(c_x, c_y)$, anchor $(p_w, p_h)$.  
-Từ các **logit** $t_x, t_y, t_w, t_h$ mô hình dự đoán, ta **decode**:  
+## 5) Encode & Decode công thức (áp dụng cho input 640, mọi stride)
+
+### Encode (từ GT → target để train)  
+Giả sử cell gốc $(c_x, c_y)$, anchor $(p_w, p_h)$, ground-truth box $(g_x, g_y, g_w, g_h)$ (theo pixel).  
+
+$$
+t_x = \frac{g_x}{s} - c_x,\quad
+t_y = \frac{g_y}{s} - c_y
+$$  
+
+$$
+t_w = \ln \left(\frac{g_w}{p_w}\right),\quad
+t_h = \ln \left(\frac{g_h}{p_h}\right)
+$$  
+
+- $(g_x, g_y)$: tâm hộp thật.  
+- $(g_w, g_h)$: kích thước hộp thật.  
+- Kết quả $(t_x,t_y,t_w,t_h)$ chính là **target** để mô hình học.
+
+---
+
+### Decode (từ output → box dự đoán)  
+Giả sử logit dự đoán $(t_x, t_y, t_w, t_h)$:  
 
 $$
 b_x = (c_x + \sigma(t_x)) \times s
@@ -83,17 +103,17 @@ b_y = (c_y + \sigma(t_y)) \times s
 $$  
 
 $$
-b_w = p_w \cdot e^{t_w}, \quad b_h = p_h \cdot e^{t_h}
+b_w = p_w \cdot e^{t_w},\quad
+b_h = p_h \cdot e^{t_h}
 $$  
 
 - $\sigma(\cdot)$ là sigmoid.  
-- $(b_x, b_y)$ là **tâm hộp** theo pixel ảnh gốc (640×640).  
-- $(b_w, b_h)$ là **kích thước hộp** theo pixel.  
-- **Anchor** có thể được lưu theo pixel ảnh gốc **hoặc** được nội bộ “quy đổi theo stride”; hai cách **tương đương về ý nghĩa** (phụ thuộc implement), kết quả cuối cùng vẫn là kích thước tính trên ảnh.  
+- $(b_x, b_y)$ là tâm hộp dự đoán (pixel).  
+- $(b_w, b_h)$ là kích thước hộp dự đoán (pixel).  
 
 ---
 
-## 6) Ví dụ số **nhìn ra “vì sao nhân 32”**  
+## 6) Ví dụ số **nhìn ra “vì sao nhân 32”**
 - Input: **640×640**  
 - Chọn tầng **s=32** → feature map **20×20**  
 - Cell chịu trách nhiệm: $(c_x, c_y) = (8, 5)$  
@@ -104,24 +124,24 @@ Tính toán:
 
 - $\sigma(-1.2) \approx 0.231$, $\sigma(-0.7) \approx 0.332$
 
-- **Tâm hộp**: 
+- **Tâm hộp**:  
 
 $$
 b_x = (8 + 0.231)\times 32 \approx 263\ \text{px}
-$$
+$$  
 
 $$
 b_y = (5 + 0.332)\times 32 \approx 171\ \text{px}
-$$
+$$  
 
-  - **Kích thước**:
+- **Kích thước**:  
 
 $$
-b_w = 150 \cdot e^{-0.1} \approx 135.7\ \text{px}, \quad
+b_w = 150 \cdot e^{-0.1} \approx 135.7\ \text{px},\quad
 b_h = 120 \cdot e^{-0.2} \approx 98.2\ \text{px}
-$$
+$$  
 
-- **Giải thích “×32”**: vì toạ độ đang ở **đơn vị cell** (lưới 20×20), muốn quay về **pixel ảnh** phải **nhân stride s=32**.
+- **Giải thích “×32”**: vì toạ độ đang ở **đơn vị cell** (lưới 20×20), muốn quay về **pixel ảnh** phải **nhân stride s=32**.  
 
 ---
 ---
