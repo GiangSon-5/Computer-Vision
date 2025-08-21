@@ -126,7 +126,7 @@ $$
 ---
 ---
 
-### Khoảng cách trong k-means cho bounding box
+# Khoảng cách trong k-means cho bounding box
 
 Trong k-means bình thường (trên dữ liệu số), ta hay dùng khoảng cách **Euclidean**:
 
