@@ -91,7 +91,7 @@ $$
 
 ---
 
-### Decode (từ output → box dự đoán)  
+## 6) Decode (từ output → box dự đoán)  
 Giả sử logit dự đoán $(t_x, t_y, t_w, t_h)$:  
 
 $$
@@ -113,35 +113,65 @@ $$
 
 ---
 
-## 6) Ví dụ số **nhìn ra “vì sao nhân 32”**
-- Input: **640×640**  
-- Chọn tầng **s=32** → feature map **20×20**  
-- Cell chịu trách nhiệm: $(c_x, c_y) = (8, 5)$  
-- Anchor lớn tại tầng này: $(p_w, p_h) = (150, 120)$  
-- Dự đoán của mô hình: $t_x=-1.2,\ t_y=-0.7,\ t_w=-0.1,\ t_h=-0.2$  
+## 7) Ví dụ số (giải thích vì sao phải nhân stride)
 
-Tính toán:  
+- **Input**: 640×640  
+- **Tầng xét**: stride $s=32$ → feature map 20×20  
+- **Cell chịu trách nhiệm**: $(c_x, c_y) = (8, 5)$  
+- **Anchor lớn**: $(p_w, p_h) = (150, 120)$  
+- **Ground truth**: $(g_x, g_y, g_w, g_h) = (260, 170, 140, 100)$  
 
-- $\sigma(-1.2) \approx 0.231$, $\sigma(-0.7) \approx 0.332$
+---
 
-- **Tâm hộp**:  
+### Encode (target để training)
 
 $$
-b_x = (8 + 0.231)\times 32 \approx 263\ \text{px}
+t_x = \frac{260}{32} - 8 \approx 0.125
 $$  
 
 $$
-b_y = (5 + 0.332)\times 32 \approx 171\ \text{px}
+t_y = \frac{170}{32} - 5 \approx 0.312
 $$  
 
-- **Kích thước**:  
+$$
+t_w = \ln\left(\frac{140}{150}\right) \approx -0.07,\quad
+t_h = \ln\left(\frac{100}{120}\right) \approx -0.18
+$$  
+
+→ Đây là **target** để mô hình học tại cell–anchor này.
+
+---
+
+### Decode (mô hình dự đoán gần đúng)
+
+Giả sử mô hình dự đoán:  
+$t_x=-1.2,\ t_y=-0.7,\ t_w=-0.1,\ t_h=-0.2$  
+
+- Sigmoid:  
+  $\sigma(-1.2) \approx 0.231$, $\sigma(-0.7) \approx 0.332$
+
+- Tâm hộp:  
+
+$$
+b_x = (8 + 0.231) \times 32 \approx 263\ \text{px}
+$$  
+
+$$
+b_y = (5 + 0.332) \times 32 \approx 171\ \text{px}
+$$  
+
+- Kích thước:  
 
 $$
 b_w = 150 \cdot e^{-0.1} \approx 135.7\ \text{px},\quad
 b_h = 120 \cdot e^{-0.2} \approx 98.2\ \text{px}
 $$  
 
-- **Giải thích “×32”**: vì toạ độ đang ở **đơn vị cell** (lưới 20×20), muốn quay về **pixel ảnh** phải **nhân stride s=32**.  
+---
+
+👉 **Giải thích vì sao phải nhân 32**:  
+- $(c_x, c_y)$ chỉ số cell trong **feature map 20×20**.  
+- Muốn chuyển về **toạ độ pixel gốc (640×640)** → phải nhân **stride s=32**.   
 
 ---
 ---
