@@ -1,6 +1,6 @@
 # 📍 Vị trí không gian trong Object Detection (YOLO)
 
-![Boudingbox](../../imgs/Boudingbox.jpg)
+![Boudingbox](../../imgs/boudingbox.jpg)
 
 Hình minh họa cho thấy cách mô hình object detection (như **YOLO**) sử dụng thông tin **vị trí không gian** để phát hiện đối tượng.
 
@@ -128,7 +128,7 @@ $$
 
 ## 📐 Các kích thước Feature Map: 13×13, 26×26, 52×52
 
-![3_Boudingbox](../../imgs/3_Boudingbox.jpg)
+![3_Boudingbox](../../imgs/3_boudingbox.jpg)
 
 Khi ảnh đầu vào (ví dụ **416×416**) đi qua mạng CNN, nó được giảm kích thước dần qua các lớp convolution và pooling.  
 Kết quả là ta thu được **các feature map** có kích thước nhỏ hơn:
