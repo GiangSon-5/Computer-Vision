@@ -60,3 +60,80 @@
 - `width_multiple (w)` → điều chỉnh **số kênh**.  
 - `max_channels (mc)` → đặt **giới hạn kênh tối đa**.  
 - `n, s, m, l, xl` → các biến thể mô hình cho **thiết bị khác nhau**, từ nhẹ đến mạnh.
+
+
+---
+---
+
+# 🔎 Ví dụ minh họa `depth_multiple`, `width_multiple`, `max_channels`
+
+## 1. Mạng gốc (baseline)
+Giả sử backbone ban đầu có:
+- **4 block** (tầng) → tương ứng với `depth = 4`
+- Mỗi block có **[64, 128, 256, 512] kênh**
+
+Biểu diễn đơn giản:
+
+```lua
+Block1: 64 kênh
+Block2: 128 kênh
+Block3: 256 kênh
+Block4: 512 kênh
+```
+
+---
+
+## 2. Trường hợp YOLOv11-n
+- `depth_multiple = 0.5` → số block chỉ còn **4 × 0.5 = 2 block**  
+- `width_multiple = 0.25` → số kênh giảm còn **25%**  
+- `max_channels = 1024` → không ảnh hưởng vì kênh nhỏ hơn 1024  
+
+Kết quả:
+
+```lua
+Block1: 64 × 0.25 = 16 kênh
+Block2: 128 × 0.25 = 32 kênh
+```
+
+👉 Backbone chỉ còn **2 tầng**, rất nhẹ.
+
+---
+
+## 3. Trường hợp YOLOv11-xl
+- `depth_multiple = 1.0` → số block giữ nguyên **4 block**  
+- `width_multiple = 1.5` → số kênh tăng 150%  
+- `max_channels = 512` → kênh không vượt quá 512  
+
+Tính toán kênh mới:
+- Block1: 64 × 1.5 = 96  
+- Block2: 128 × 1.5 = 192  
+- Block3: 256 × 1.5 = 384  
+- Block4: 512 × 1.5 = 768 nhưng **bị giới hạn bởi max_channels = 512**  
+
+Kết quả:
+
+```lua
+Block1: 96 kênh
+Block2: 192 kênh
+Block3: 384 kênh
+Block4: 512 kênh (bị giới hạn bởi max_channels)
+```
+
+👉 Backbone vẫn đủ **4 tầng**, nhưng kênh nhiều hơn, mạnh hơn.
+
+---
+
+## 4. So sánh trực quan
+
+| Biến thể    | Số block (theo d) | Số kênh (theo w, mc)                  |
+|-------------|-------------------|----------------------------------------|
+| Baseline    | 4                 | [64, 128, 256, 512]                   |
+| YOLOv11-n   | 2                 | [16, 32]                              |
+| YOLOv11-xl  | 4                 | [96, 192, 384, 512 (giới hạn)]        |
+
+---
+
+# ✅ Kết luận
+- `depth_multiple (d)` → quyết định **số tầng** (block).  
+- `width_multiple (w)` → quyết định **số kênh** trong mỗi tầng.  
+- `max_channels (mc)` → đặt **trần giới hạn**, không cho số kênh vượt quá mức này.
