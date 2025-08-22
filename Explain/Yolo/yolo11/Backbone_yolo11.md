@@ -19,7 +19,7 @@ YOLOv11 được chia thành 3 phần chính:
 - Số kênh đầu ra tính theo công thức:
 
 $$
-\text{output\_channels} = \min(\text{base\_channel}, \text{max\_channel}) \times \text{width\_multiple}
+\text{OutputChannels} = \min(\text{BaseChannel}, \text{MaxChannel}) \times \text{WidthMultiple}
 $$
 
 - Kết quả được chuyển cho **Neck** (ví dụ SPF).  
