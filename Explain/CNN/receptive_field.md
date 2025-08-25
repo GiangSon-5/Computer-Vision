@@ -150,6 +150,8 @@ Kết quả: một neuron ở tầng 3 nhìn thấy **9 pixel** từ ảnh gốc
 
 # Liên hệ Công Thức với Ví Dụ Receptive Field
 
+![cnn](../../imgs/receptive-field-in-convolutional-networks.png)
+
 ---
 
 ## 1. Công thức nhắc lại
