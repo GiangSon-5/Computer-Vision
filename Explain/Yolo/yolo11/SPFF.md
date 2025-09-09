@@ -1,6 +1,4 @@
-# SPPF (ultralytics.nn.modules.block.SPPF) — Giải thích + Toán minh họa (ma trận 2D từng bước)
-
-> Mục tiêu: giải thích **chính xác** cách SPPF hoạt động (theo code Ultralytics) và *minh họa từng bước bằng ma trận 2D* để người nhập môn hiểu rõ **kết quả từ đâu ra**.
+# SPPF (ultralytics.nn.modules.block.SPPF) 
 
 ---
 
