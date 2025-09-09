@@ -1,5 +1,7 @@
 # Backbone trong YOLOv11
 
+[VÍ DỤ BACKBONE](../yolo11/EX/Backbone_yolo11_Ex.md)
+
 Backbone là **thành phần đầu tiên và quan trọng nhất** trong YOLOv11. Nó đóng vai trò như *bộ trích xuất đặc trưng* (feature extractor), biến ảnh đầu vào thành *các bản đồ đặc trưng (feature maps)* giàu thông tin để chuyển tiếp cho **Neck** và **Head**.
 
 ---
@@ -22,8 +24,13 @@ $$
 \text{OutputChannels} = \min(\text{BaseChannel}, \text{MaxChannel}) \times \text{WidthMultiple}
 $$
 
+⚡ **[VÍ DỤ OutputChannels](../../yolo11/c3k2.md)**
+
+
 - Kết quả được chuyển cho **Neck** (ví dụ SPF).  
 - Các phiên bản YOLOv11 (`n, s, m, l, xl`) khác nhau ở: `depth multiple, width multiple, max channels`.
+
+⚡ **[VÍ DỤ các phiên bản YOLO11](../yolo11/yolo11_n_S_m_l_xl.md)**
 
 ---
 
@@ -73,4 +80,5 @@ Quá trình giảm độ phân giải diễn ra bằng **convolution với strid
 - Dùng **stride=2** để giảm độ phân giải dần dần.  
 - Đầu ra phụ thuộc vào `depth multiple, width multiple, max channel`.  
 - Cung cấp **feature maps đa cấp** cho Neck và Head để thực hiện detection.
+
 
