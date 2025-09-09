@@ -24,7 +24,7 @@
 
 ---
 
-## 2) Công thức tổng quan (không render)
+## 2) Công thức tổng quan 
 
 $$
 c' = \left\lfloor \frac{c_1}{2} \right\rfloor
@@ -72,7 +72,7 @@ $$
 
 ---
 
-## Thiết lập ví dụ (nhắc lại ngắn)
+## Thiết lập ví dụ 
 - Batch N = 1 (bỏ chỉ số n).  
 - Input channels `c1 = 2`, output channels `c2 = 1`.  
 - H = W = 4.  
