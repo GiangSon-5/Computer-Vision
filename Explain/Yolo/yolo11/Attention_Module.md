@@ -49,10 +49,13 @@ Vì thế thường cho Q,K nhỏ hơn V để giảm chi phí tính toán.
 - Split:
 
 $$
-Q: (B, \text{num}_{\text{heads}}, \text{key}_{\text{dim}}, N) \\
-K: (B, \text{num}_{\text{heads}}, \text{key}_{\text{dim}}, N) \\
-V: (B, \text{num}_{\text{heads}}, \text{head}_{\text{dim}}, N)
+\begin{aligned}
+Q &: (B, \text{num}_{\text{heads}}, \text{key}_{\text{dim}}, N) \\
+K &: (B, \text{num}_{\text{heads}}, \text{key}_{\text{dim}}, N) \\
+V &: (B, \text{num}_{\text{heads}}, \text{head}_{\text{dim}}, N)
+\end{aligned}
 $$
+
 
 
 với $N = H \times W$ (tổng số pixel).
