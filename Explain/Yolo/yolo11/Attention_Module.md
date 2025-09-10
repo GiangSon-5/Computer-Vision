@@ -70,7 +70,7 @@ $$
 S = Q^T K \cdot \text{scale}
 $$
 
-- $S$ có shape $(B, \text{num\_heads}, N, N)$.
+- $S$ có shape $(B, \text{num}_{\text{heads}}, N, N)$.
 - Mỗi phần tử $s_{ij}$ = mức độ liên quan của vị trí $i$ đến vị trí $j$.
 
 Chuẩn hóa softmax theo từng hàng:
