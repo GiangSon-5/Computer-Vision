@@ -42,6 +42,8 @@ Vì thế thường cho Q,K nhỏ hơn V để giảm chi phí tính toán.
 
 ## 4. Luồng xử lý (forward)
 
+⚡ **[Q, K, V là gì](../yolo11/EX/Q,K,V%20-%20Attention.md)**
+
 ### Bước 1 — Sinh Q, K, V
 
 - Input: $x$ có shape $(B, C, H, W)$
