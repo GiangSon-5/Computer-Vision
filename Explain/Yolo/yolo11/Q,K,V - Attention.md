@@ -1,213 +1,89 @@
 # Ví dụ minh họa đầy đủ: từ X → Q,K,V → Attention → Output  
+---
 
+# Q, K, V là gì trong Attention?
 
-> **Mục tiêu:** cho bạn thấy **Q, K, V được tạo từ X bằng các ma trận W** rồi dùng công thức
->
-> $$
-> \text{Attention}(Q,K,V) = \text{Softmax}\Big(\frac{QK^T}{\sqrt{d_k}}\Big) V
-> $$
->
-> Chọn các ma trận trọng số rất đơn giản để dễ tính và trực quan.
+## 1. Khởi nguồn từ bài toán “Tìm kiếm thông tin”
+
+Bạn có một **câu hỏi (query)**, bạn so sánh nó với một tập **chỉ mục (keys)**, và từ đó bạn chọn ra những **dữ liệu (values)** phù hợp nhất.
+
+Ví dụ đời thường:
+
+* Bạn hỏi Google: “Nhà hàng sushi gần tôi” → **Query (Q)**
+* Google so khớp với cơ sở dữ liệu → **Keys (K)**
+* Trả về danh sách nhà hàng kèm thông tin → **Values (V)**
 
 ---
 
+## 2. Trong Attention
 
+Trong mô hình, Q, K, V đều được sinh ra từ **cùng một feature map đầu vào** bằng các phép chiếu tuyến tính khác nhau (Conv1×1 ở đây).
 
-# Self-Attention với Positional Encoding (ví dụ minh họa)
-
----
-
-## 1) Đầu vào X (feature matrix)
-
-| pixel | c0 | c1 | c2 | c3 |
-|-------|----|----|----|----|
-| p0    | 1  | 0  | 1  | 2  |
-| p1    | 2  | 1  | 0  | 2  |
-| p2    | 3  | 0  | 1  | 2  |
-| p3    | 4  | 1  | 0  | 2  |
-
-- Có $N=4$ token/pixel; mỗi token là vector 4 chiều.
+* **Query (Q)**: “câu hỏi” từ mỗi pixel/patch → nó muốn biết nên tập trung vào vị trí nào.
+* **Key (K)**: “chỉ mục” của mỗi pixel/patch → mô tả nội dung đặc trưng để so sánh.
+* **Value (V)**: “giá trị thông tin thực” của pixel/patch → cái mà ta sẽ tổng hợp để tạo ra feature mới.
 
 ---
 
-## 1.1) Thêm Positional Encoding (PE)
+## 3. Cách hoạt động
 
-Để mô hình phân biệt vị trí các pixel (token), ta cộng thêm vector **positional encoding** vào từng token trước khi tính Q/K/V.  
+1. **So khớp Q và K**:
 
-Ví dụ chọn PE 4 chiều dạng đơn giản (giả định):  
+   * Lấy Q của một vị trí (pixel) đi so sánh với tất cả K (của mọi pixel).
+   * Tạo ra điểm tương đồng \$s\_{ij}\$ = mức độ liên quan giữa pixel i và pixel j.
 
-| pixel | pe0 | pe1 | pe2 | pe3 |
-|-------|-----|-----|-----|-----|
-| p0    | 0.1 | 0.0 | 0.1 | 0.0 |
-| p1    | 0.2 | 0.0 | 0.2 | 0.0 |
-| p2    | 0.3 | 0.0 | 0.3 | 0.0 |
-| p3    | 0.4 | 0.0 | 0.4 | 0.0 |
+2. **Softmax(QK^T)**:
 
-Cộng PE vào X → thu được X':
+   * Chuyển các điểm tương đồng thành phân phối xác suất (attention weights).
 
-| pixel | c0' | c1' | c2' | c3' |
-|-------|-----|-----|-----|-----|
-| p0    | 1.1 | 0.0 | 1.1 | 2.0 |
-| p1    | 2.2 | 1.0 | 0.2 | 2.0 |
-| p2    | 3.3 | 0.0 | 1.3 | 2.0 |
-| p3    | 4.4 | 1.0 | 0.4 | 2.0 |
+3. **Trộn V theo trọng số**:
 
-Từ giờ về sau, ta sẽ dùng **X' = X + PE** để tính Q, K, V.  
-
-Nếu bỏ qua PE, attention chỉ thấy giá trị kênh mà không biết "pixel nào ở đâu".
+   * Với mỗi pixel i, lấy trung bình có trọng số của tất cả V (theo attention weights).
+   * Kết quả: pixel i giờ chứa thông tin không chỉ từ bản thân nó, mà còn “tích hợp” từ nhiều vị trí khác.
 
 ---
 
-## 2) Chọn ma trận chiếu (W_Q, W_K, W_V) 
+## 4. Minh họa ASCII đơn giản
 
-Để dễ tính, ta chọn cùng một ma trận $W$ cho Q, K, V:
-
-- $W$ (kích thước $4 \times 2$):
-
-```lua
-W = 
-[[1, 0],
- [0, 1],
- [1, 0],
- [0, 1]]
 ```
-
-Khi đó: với mỗi token \$x = \[c0,c1,c2,c3]\$ ta có:
-
-$$
-Q = xW, \quad K = xW, \quad V = xW
-$$
-
----
-
-## 3) Tính Q, K, V cho từng pixel
-
-Công thức:
-
-$$
-\text{comp1} = c0' + c2', \quad \text{comp2} = c1' + c3'
-$$
-
-Tính:
-
-* p0: x'=\[1.1,0.0,1.1,2.0] → Q=K=V=\[2.2, 2.0]
-* p1: x'=\[2.2,1.0,0.2,2.0] → Q=K=V=\[2.4, 3.0]
-* p2: x'=\[3.3,0.0,1.3,2.0] → Q=K=V=\[4.6, 2.0]
-* p3: x'=\[4.4,1.0,0.4,2.0] → Q=K=V=\[4.8, 3.0]
-
-Tóm tắt:
-
-| pixel | Q = K = V   |
-| ----- | ----------- |
-| p0    | \[2.2, 2.0] |
-| p1    | \[2.4, 3.0] |
-| p2    | \[4.6, 2.0] |
-| p3    | \[4.8, 3.0] |
-
----
-
-## 4) Tính ma trận score \$S = Q K^\top\$
-
-Tính dot product:
-
-* Row p0: 8.84, 12.28, 14.12, 18.36
-* Row p1: 12.28, 15.76, 17.04, 22.92
-* Row p2: 14.12, 17.04, 25.16, 30.00
-* Row p3: 18.36, 22.92, 30.00, 33.84
-
-Ma trận \$S\$ (4×4):
-
-```lua
-S =
-[[ 8.84, 12.28, 14.12, 18.36],
- [12.28, 15.76, 17.04, 22.92],
- [14.12, 17.04, 25.16, 30.00],
- [18.36, 22.92, 30.00, 33.84]]
+Input Feature Map (x)
+        │
+   Conv1×1
+        │
+ ┌──────┴───────┐
+ │      │       │
+ Q      K       V
+ │      │       │
+ │      └───┐   │
+ │          │   │
+ └── QK^T ──┘   │
+       │        │
+   Softmax      │
+       │        │
+       └───► Weighted sum ◄── V
+                │
+            Output Feature
 ```
 
 ---
 
-## 5) Scale: chia cho \$\sqrt{d\_k}\$
+## 5. Ý nghĩa
 
-Với \$d\_k = 2\$:
-
-$$
-\tilde S = \frac{S}{\sqrt{2}}
-$$
-
-Kết quả:
-
-```lua
-~S ≈
-[[ 6.25,  8.69,  9.99, 12.98],
- [ 8.69, 11.14, 12.05, 16.21],
- [ 9.99, 12.05, 17.79, 21.21],
- [12.98, 16.21, 21.21, 23.93]]
-```
+* **Q**: "Tôi muốn tìm thông tin gì?"
+* **K**: "Tôi có đặc điểm gì để được so khớp?"
+* **V**: "Tôi chứa thông tin gì sẽ được lấy ra nếu ai đó chú ý đến tôi."
 
 ---
 
-## 6) Softmax theo hàng → ma trận attention A
+👉 Nói cách khác:
 
-Công thức:
-
-$$
-\alpha_{ij} = \frac{e^{\tilde S_{ij}}}{\sum_k e^{\tilde S_{ik}}}
-$$
-
-Sau khi tính (làm tròn):
-
-|    | p0      | p1      | p2      | p3      |
-| -- | ------- | ------- | ------- | ------- |
-| p0 | 0.00146 | 0.01661 | 0.04927 | 0.93266 |
-| p1 | 0.00148 | 0.01244 | 0.03361 | 0.95247 |
-| p2 | 0.00000 | 0.00001 | 0.01804 | 0.98195 |
-| p3 | 0.00005 | 0.00154 | 0.17340 | 0.82499 |
+* **Q, K** chỉ để tính “ai nên chú ý đến ai”.
+* **V** mới là cái “thông tin thực” mà ta trộn lại thành đầu ra.
 
 ---
 
-## 7) Tính Output: 
-$Out(i) = \sum\_j \alpha\_{ij} V\_j$
+Bạn có muốn mình viết thêm 1 **ví dụ số nhỏ (ma trận Q,K,V size 2×2)** rồi tính ra Attention step by step để thấy rõ cách QK^T và Softmax hoạt động không?
 
-Với:
-
-* V(p0) = \[2.2,2.0]
-* V(p1) = \[2.4,3.0]
-* V(p2) = \[4.6,2.0]
-* V(p3) = \[4.8,3.0]
-
-Kết quả:
-
-* Out(p0) ≈ \[4.746, 2.952]
-* Out(p1) ≈ \[4.742, 2.954]
-* Out(p2) ≈ \[4.796, 2.982]
-* Out(p3) ≈ \[4.728, 2.962]
-
----
-
-## 8) Bảng kết quả cuối cùng (xấp xỉ)
-
-| pixel | out\[0] | out\[1] |
-| ----- | ------- | ------- |
-| p0    | 4.746   | 2.952   |
-| p1    | 4.742   | 2.954   |
-| p2    | 4.796   | 2.982   |
-| p3    | 4.728   | 2.962   |
-
----
-
-# Kết luận
-
-* **Positional Encoding (PE)** giúp các token khác vị trí có vector khác nhau trước khi tính Q/K/V.
-* Nếu không có PE, các token có giá trị kênh giống nhau nhưng ở vị trí khác sẽ bị attention xem như giống hệt.
-* Kết quả cuối cho thấy các vector output khá gần nhau, nhưng vẫn có sai khác nhỏ phản ánh ảnh hưởng của vị trí.
-
-```
-
----
-
-👉 Bạn có muốn mình thêm **bảng so sánh kết quả cuối cùng có PE vs không có PE** để thấy rõ sự khác biệt không?
-```
 
 ---
 
