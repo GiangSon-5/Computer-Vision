@@ -10,14 +10,6 @@
 > Chọn các ma trận trọng số rất đơn giản để dễ tính và trực quan.
 
 ---
-Rõ rồi 👍
-Mình sẽ **chuẩn hóa lại toàn bộ markdown** theo đúng quy tắc bạn đưa:
-
-* Công thức dài → dùng `$$ ... $$` riêng một khối, có dòng trống trước sau.
-* Cho phép xuống dòng bằng `\\` nếu công thức dài.
-* Công thức inline ngắn → dùng `$ ... $`.
-* Khối công thức phải căn trái tuyệt đối (không thụt lề, không tab).
-
 
 
 
