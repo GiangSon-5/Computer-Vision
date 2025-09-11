@@ -315,9 +315,10 @@ Trong đó:
 
 - **BCE(mask)**: trung bình Binary Cross Entropy trên các pixel  
 - **DiceLoss**:  
-  $$
-  \text{DiceLoss} = 1 - \frac{2 \cdot \text{intersection}}{\text{sum pred} + \text{sum target}}
-  $$
+
+$$
+\text{DiceLoss} = 1 - \frac{2 \cdot \text{intersection}}{\text{sum pred} + \text{sum target}}
+$$
 
 ---
 
