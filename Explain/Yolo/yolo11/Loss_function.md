@@ -103,7 +103,7 @@ $$
 
 $$
 \mathcal{L}_{cls} = 
-\frac{1}{\text{target}\_{\text{scores}\_{\text{sum}}}}
+\frac{1}{\text{target}\_\text{scores}\_\text{sum}}
 \sum_{i=1}^{M} \sum_{j=1}^{C} \text{BCE}(p_{ij}, t_{ij})
 $$
 
