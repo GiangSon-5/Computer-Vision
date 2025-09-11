@@ -12,47 +12,58 @@ Chúng ta sử dụng dữ liệu giả định nhỏ để dễ theo dõi:
 
 - **Predicted scores (`pred_scores`)**  
   Xác suất dự đoán cho từng anchor thuộc từng lớp  
-  `shape = [1, 4, 2]`
+  `shape = [1, 4, 2]`  
+  → Batch size = 1, có 4 anchor boxes, mỗi anchor dự đoán xác suất cho 2 lớp (background, object)
 
 - **Target scores (`target_scores`)**  
-  Nhãn ground-truth  
-  `shape = [1, 4, 2]`
+  Nhãn ground-truth cho từng anchor  
+  `shape = [1, 4, 2]`  
+  → Mỗi anchor có nhãn one-hot cho 2 lớp (ví dụ: `[1, 0]` nếu là background)
 
 - **Predicted bboxes (`pred_bboxes`)**  
   Tọa độ box dự đoán (left, top, right, bottom)  
-  `shape = [1, 4, 4]`
+  `shape = [1, 4, 4]`  
+  → Mỗi anchor có 4 giá trị tọa độ: `[x1, y1, x2, y2]`
 
 - **Target bboxes (`target_bboxes`)**  
-  Tọa độ box thật  
-  `shape = [1, 4, 4]`
+  Tọa độ box ground-truth  
+  `shape = [1, 4, 4]`  
+  → Cấu trúc giống `pred_bboxes`, dùng để tính loss định vị
 
 - **Predicted dist (`pred_dist`)**  
-  Phân phối cho DFL – 4 coords, mỗi coord có 4 bins  
-  `shape = [1, 4, 4, reg_max=4]`
+  Phân phối xác suất cho từng tọa độ box theo DFL  
+  `shape = [1, 4, 4, reg_max=4]`  
+  → Với mỗi anchor, mỗi tọa độ (4 coords) có phân phối xác suất trên 4 bins (softmax)
 
 - **Target dist**  
-  Chỉ số left/right cho DFL
+  Chỉ số bin trái/phải gần nhất với giá trị tọa độ thật  
+  → Dùng để tính loss DFL bằng cách nội suy giữa 2 bin gần nhất
 
 - **Predicted masks (`pred_masks`)**  
-  Mặt nạ dự đoán sau sigmoid  
-  `shape = [1, 4, 2x2]`
+  Mặt nạ phân đoạn dự đoán sau sigmoid  
+  `shape = [1, 4, 2x2]`  
+  → Mỗi anchor có mặt nạ kích thước 2×2 pixel, giá trị từ 0–1
 
 - **Target masks (`M_i`)**  
   Mặt nạ ground-truth  
-  `shape = [1, 4, 2x2]`
+  `shape = [1, 4, 2x2]`  
+  → Mỗi anchor có mặt nạ nhị phân (0 hoặc 1) để so sánh với `pred_masks`
 
 - **Foreground mask (`fg_mask`)**  
-  Chỉ các anchor positive  
-  → Giả định tất cả 4 đều positive → `sum_fg = 4`
+  Mặt nạ đánh dấu các anchor positive (được dùng để tính loss)  
+  → Giả định tất cả 4 anchor đều positive → `sum_fg = 4`
 
 - **Target scores sum**  
-  Tổng `target_scores = 4` (mỗi anchor có 1 lớp positive)
+  Tổng số nhãn dương trong batch  
+  → `target_scores_sum = 4` (mỗi anchor có 1 lớp positive)
 
 - **Hyperparameters (`hyp`)**  
-  - $\lambda_{box} = 1.0$  
-  - $\lambda_{seg} = 1.0$  
-  - $\lambda_{cls} = 0.5$  
-  - $\lambda_{dfl} = 1.5$
+  Các hệ số điều chỉnh trọng số cho từng thành phần loss:  
+  - $\lambda_{box} = 1.0$ → trọng số cho Box Loss  
+  - $\lambda_{seg} = 1.0$ → trọng số cho Segmentation Loss  
+  - $\lambda_{cls} = 0.5$ → trọng số cho Classification Loss  
+  - $\lambda_{dfl} = 1.5$ → trọng số cho Distribution Focal Loss
+
 
 Bây giờ, tính toán từng thành phần Loss theo công thức.
 
