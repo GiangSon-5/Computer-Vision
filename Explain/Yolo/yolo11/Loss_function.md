@@ -27,11 +27,11 @@ $$
 
 **Với các hệ số cụ thể:**
 
-- \( B = 1 \)
-- \( \lambda_{box} = 1.0 \)
-- \( \lambda_{seg} = 1.0 \)
-- \( \lambda_{cls} = 0.5 \)
-- \( \lambda_{dfl} = 1.5 \)
+- $B = 1$
+- $\lambda_{box} = 1.0$
+- $\lambda_{seg} = 1.0$
+- $\lambda_{cls} = 0.5$
+- $\lambda_{dfl} = 1.5$
 
 $$
 \mathcal{L}_{total} =
