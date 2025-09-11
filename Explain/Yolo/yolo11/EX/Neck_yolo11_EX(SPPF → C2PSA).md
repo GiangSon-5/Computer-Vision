@@ -1,8 +1,7 @@
-Cảm ơn bạn đã chỉ ra sự khác biệt và cung cấp mã nguồn chính xác của lớp `C2PSA` trong YOLOv11. Tôi xin lỗi vì đã đưa ra phiên bản không chính xác trước đó. Dựa trên mã nguồn mới mà bạn cung cấp, tôi sẽ giải thích chi tiết cấu trúc và luồng xử lý của `C2PSA` trong YOLOv11, đồng thời điều chỉnh để phù hợp với ngữ cảnh từ **SPPF** đến **C2PSA** mà bạn đang quan tâm.
-
----
 
 # 🔄 Luồng xử lý từ SPPF → C2PSA trong YOLOv11
+
+![](../imgs/C2PSA.jpg)
 
 ## 1. Đầu ra từ **SPPF [1024, 5]**
 - **Kích thước không gian**: Vẫn là **20x20**.
