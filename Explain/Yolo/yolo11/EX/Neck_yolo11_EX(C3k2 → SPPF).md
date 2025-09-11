@@ -2,6 +2,8 @@
 
 # 🔄 Luồng xử lý sau C3k2 → SPPF
 
+![](../imgs/SPPF.jpg)
+
 ### 1. Đầu vào sau **C3k2**
 
 * Giả sử input ban đầu khối này có kích thước không gian **20 × 20** (do đã downsample nhiều lần từ ảnh gốc 640).

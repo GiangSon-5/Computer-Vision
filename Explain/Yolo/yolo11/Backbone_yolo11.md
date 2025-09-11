@@ -24,7 +24,7 @@ $$
 \text{OutputChannels} = \min(\text{BaseChannel}, \text{MaxChannel}) \times \text{WidthMultiple}
 $$
 
-⚡ **[VÍ DỤ OutputChannels](../../yolo11/c3k2.md)**
+⚡ **[VÍ DỤ OutputChannels](../../Yolo/yolo11/EX/OutputChannels_EX.md)**
 
 
 - Kết quả được chuyển cho **Neck** (ví dụ SPF).  
