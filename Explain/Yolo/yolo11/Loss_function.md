@@ -102,7 +102,7 @@ $$
 ### 📐 Công thức
 
 $$
-\mathcal{L}_{cls} = \frac{1}{\text{target\_scores\_sum}} \sum_{i=1}^{M} \sum_{j=1}^{C} \text{BCE}(p_{ij}, t_{ij})
+\mathcal{L}_{cls} = \frac{1}{\text{target}\_\text{scores}\_\text{sum}} \sum_{i=1}^{M} \sum_{j=1}^{C} \text{BCE}(p_{ij}, t_{ij})
 $$
 
 Trong đó Binary Cross Entropy (BCE) được tính như sau:
