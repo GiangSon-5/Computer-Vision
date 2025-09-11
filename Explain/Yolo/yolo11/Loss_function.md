@@ -343,11 +343,13 @@ $$
 - $\lambda_{seg} \cdot \mathcal{L}_{seg} = 1.0 \cdot 0.55 = 0.55$
 
 **Tổng weighted loss**:  
+
 $$
 \text{Sum weighted} = 0.6122 + 0.09 + 8.736 + 0.55 \approx 9.9882
 $$
 
-**Loss tổng thể**:  
+**Loss tổng thể**: 
+
 $$
 \mathcal{L}_{total} = B \cdot \text{Sum weighted} = 1 \cdot 9.9882 \approx 9.9882
 $$
