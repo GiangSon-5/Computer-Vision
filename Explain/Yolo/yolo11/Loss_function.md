@@ -275,9 +275,10 @@ Trong đó:
   $1.456 \cdot 4 \text{ coords} \cdot 4 \text{ boxes} = 23.296$
 
 - **Loss trung bình**:  
-  $$
-  \mathcal{L}_{dfl} = \frac{23.296}{4} \approx 5.824
-  $$
+
+$$
+\mathcal{L}_{dfl} = \frac{23.296}{4} \approx 5.824
+$$
 
 ---
 
