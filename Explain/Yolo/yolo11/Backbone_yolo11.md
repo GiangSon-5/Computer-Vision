@@ -30,7 +30,7 @@ $$
 - Kết quả được chuyển cho **Neck** (ví dụ SPF).  
 - Các phiên bản YOLOv11 (`n, s, m, l, xl`) khác nhau ở: `depth multiple, width multiple, max channels`.
 
-⚡ **[VÍ DỤ các phiên bản YOLO11](../yolo11/yolo11_n_S_m_l_xl.md)**
+⚡ **[VÍ DỤ các phiên bản YOLO11](../yolo11/EX/yolo11_n_S_m_l_xl.md)**
 
 ---
 
