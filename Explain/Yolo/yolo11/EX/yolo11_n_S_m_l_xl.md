@@ -67,26 +67,6 @@
 
 # 🔎 Ví dụ minh họa `depth_multiple`, `width_multiple`, `max_channels`
 
-## 1. Mạng gốc (baseline)
-Giả sử backbone ban đầu có:
-- **4 block** (tầng) → tương ứng với `depth = 4`
-- Mỗi block có **[64, 128, 256, 512] kênh**
-
-Biểu diễn đơn giản:
-
-```lua
-Block1: 64 kênh
-Block2: 128 kênh
-Block3: 256 kênh
-Block4: 512 kênh
-```
-
----
-Ok, mình viết lại cho bạn một bản **Markdown hoàn chỉnh**, có đủ công thức, tính toán và giải thích rõ ràng vai trò của `d (depth_multiple)` chỉ tác động đến block **C3k2** (không ảnh hưởng Conv thường).
-
----
-
-# YOLOv11 — Ảnh hưởng của `d (depth_multiple)` đến Backbone
 
 ## 1. Ý nghĩa của 3 tham số
 
