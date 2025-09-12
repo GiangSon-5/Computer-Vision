@@ -1,4 +1,4 @@
-![yolov11](../../../imgs/yolo11_n_s_m_l_xl.jpg)
+![yolov11](../imgs/yolo11_n_s_m_l_xl.jpg)
 # 📊 Ý nghĩa các cột trong bảng cấu hình YOLOv11
 
 ## 1. Các cột trong bảng
