@@ -82,24 +82,106 @@ Block4: 512 kênh
 ```
 
 ---
-
-## 2. Trường hợp YOLOv11-n
-- `depth_multiple = 0.5` → số block chỉ còn **4 × 0.5 = 2 block**  
-- `width_multiple = 0.25` → số kênh giảm còn **25%**  
-- `max_channels = 1024` → không ảnh hưởng vì kênh nhỏ hơn 1024  
-
-Kết quả:
-
-```lua
-Block1: 64 × 0.25 = 16 kênh
-Block2: 128 × 0.25 = 32 kênh
-```
-
-👉 Backbone chỉ còn **2 tầng**, rất nhẹ.
+Ok, mình viết lại cho bạn một bản **Markdown hoàn chỉnh**, có đủ công thức, tính toán và giải thích rõ ràng vai trò của `d (depth_multiple)` chỉ tác động đến block **C3k2** (không ảnh hưởng Conv thường).
 
 ---
 
-## 3. Trường hợp YOLOv11-xl
+# YOLOv11 — Ảnh hưởng của `d (depth_multiple)` đến Backbone
+
+## 1. Ý nghĩa của 3 tham số
+
+* **`d (depth_multiple)`**: hệ số nhân cho số lượng block lặp (C3, C2f, C3k2).
+  → Không áp dụng cho các Conv đơn lẻ.
+
+* **`w (width_multiple)`**: hệ số nhân cho số lượng kênh (channel).
+
+* **`mc (max_channels)`**: trần trên cho số kênh.
+
+---
+
+## 2. Backbone gốc (baseline)
+
+| Tầng | Kích thước | Kênh gốc | Thành phần  | Block gốc |
+| ---- | ---------- | -------- | ----------- | --------- |
+| 0    | 640×640    | 3        | Input (ảnh) | -         |
+| 1    | 320×320    | 64       | Conv        | -         |
+| 2    | 160×160    | 128      | Conv + C3k2 | 3 x d     |
+| 3    | 80×80      | 256      | Conv + C3k2 | 6 x d     |
+| 4    | 40×40      | 512      | Conv + C3k2 | 6 x d     |
+| 5    | 20×20      | 1024     | C3k2        | 3 x d     |
+
+---
+
+## 3. Tính kênh mới với `w = 0.25`
+
+Công thức:
+
+$$
+C' = \text{make\_divisible}(C \times w, 8), \quad C' \leq mc
+$$
+
+* Tầng 1: $64 × 0.25 = 16$ → 16
+* Tầng 2: $128 × 0.25 = 32$ → 32
+* Tầng 3: $256 × 0.25 = 64$ → 64
+* Tầng 4: $512 × 0.25 = 128$ → 128
+* Tầng 5: $1024 × 0.25 = 256$ → 256 (≤ mc=1024)
+
+👉 Kênh mới: **\[16, 32, 64, 128, 256]**
+
+---
+
+## 4. Tính block mới với `d = 0.5`
+
+Công thức:
+
+$$
+B' = \max(1, \text{round}(B \times d))
+$$
+
+* Tầng 2: $3 × 0.5 = 1.5$ → 2
+* Tầng 3: $6 × 0.5 = 3$ → 3
+* Tầng 4: $6 × 0.5 = 3$ → 3
+* Tầng 5: $3 × 0.5 = 1.5$ → 2
+
+👉 Block mới: **\[2, 3, 3, 2]**
+
+---
+
+## 5. Backbone YOLOv11-n (d=0.5, w=0.25, mc=1024)
+
+| Tầng | Kích thước | Kênh gốc → Kênh mới | Block gốc → Block mới |
+| ---- | ---------- | ------------------- | --------------------- |
+| 0    | 640×640    | 3 → 3               | -                     |
+| 1    | 320×320    | 64 → 16             | -                     |
+| 2    | 160×160    | 128 → 32            | 3 → 2                 |
+| 3    | 80×80      | 256 → 64            | 6 → 3                 |
+| 4    | 40×40      | 512 → 128           | 6 → 3                 |
+| 5    | 20×20      | 1024 → 256          | 3 → 2                 |
+
+---
+
+## 6. Giải thích `n = 6 × d`
+
+* Trong paper ghi `n = 6 × d` nghĩa là: số block **C3k2** được điều chỉnh theo `d`.
+* Ví dụ tầng 3 gốc có 6 block:
+
+  * YOLOv11-n (`d=0.5`) → $6×0.5=3$ block
+  * YOLOv11-s (`d=0.75`) → $6×0.75=4.5$ → 5 block
+  * YOLOv11-m/l/xl (`d=1.0`) → $6×1=6$ block
+
+👉 `d` **chỉ tác động đến C3k2 block**, còn Conv đầu vào/giảm kích thước vẫn giữ nguyên.
+
+---
+
+✅ **Kết luận**:
+* Backbone YOLOv11-n có kênh giảm còn 25% và block giảm còn một nửa so với bản gốc.
+
+
+
+
+---
+
+## 3. Trường hợp YOLOv11-xl (bị giới hạn max-channel)
 - `depth_multiple = 1.0` → số block giữ nguyên **4 block**  
 - `width_multiple = 1.5` → số kênh tăng 150%  
 - `max_channels = 512` → kênh không vượt quá 512  
@@ -121,15 +203,7 @@ Block4: 512 kênh (bị giới hạn bởi max_channels)
 
 👉 Backbone vẫn đủ **4 tầng**, nhưng kênh nhiều hơn, mạnh hơn.
 
----
 
-## 4. So sánh trực quan
-
-| Biến thể    | Số block (theo d) | Số kênh (theo w, mc)                  |
-|-------------|-------------------|----------------------------------------|
-| Baseline    | 4                 | [64, 128, 256, 512]                   |
-| YOLOv11-n   | 2                 | [16, 32]                              |
-| YOLOv11-xl  | 4                 | [96, 192, 384, 512 (giới hạn)]        |
 
 ---
 
