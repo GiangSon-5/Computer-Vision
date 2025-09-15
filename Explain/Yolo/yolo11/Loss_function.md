@@ -339,10 +339,11 @@ $$
 - **Trung bình cho 4 anchors**:  
   `0.55 × 4 = 2.2`
 
-- **Loss trung bình**:  
-  $$
-  \mathcal{L}_{seg} = \frac{2.2}{4} = 0.55
-  $$
+- **Loss trung bình**: 
+
+$$
+\mathcal{L}_{seg} = \frac{2.2}{4} = 0.55
+$$
 
 ---
 
