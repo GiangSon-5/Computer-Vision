@@ -115,9 +115,9 @@ Giải thích: `self.ffn` bao gồm hai lớp Conv 1x1:
 
 **Công thức:**
 
-Inline math:
-
-$h = W_1 \cdot out_{attn}, \quad ffn_{out} = W_2 \cdot h$
+$$
+h = W_1 \cdot out_{attn}, \quad ffn_{out} = W_2 \cdot h
+$$
 
 ### 3.1 Tính chi tiết cho p0
 - `out_attn(p0) = [4.746, 2.952]`
